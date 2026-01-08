@@ -20,6 +20,7 @@ add_action('plugins_loaded', function () {
             'Last Updated'                  => 'Última atualização',
             'Total Enrolled'                => 'Total de inscritos',
             'What I will learn? '           => 'O que vou aprender?',
+            'What I will learn?'            => 'O que vou aprender?',
             'Course Curriculum'             => 'Currículo do curso',
             'Wishlist'                      => 'Lista de desejos',
             'Rating'                        => 'Avaliação',
@@ -27,6 +28,10 @@ add_action('plugins_loaded', function () {
             'Course Progress'               => 'Progresso do Curso',
             'Share'                         => 'Compartilhar',
             'Download Certificate'          => 'Baixar certificado',
+            'Duration'                      => 'Duração',
+            'Complete'                      => 'Completo',
+            'A course by'                   => 'Publicado por',
+            'Um curso de'                   => 'Publicado por',
 
             // Meses
             'January'   => 'Janeiro',
@@ -57,6 +62,7 @@ add_action('plugins_loaded', function () {
             'Grand Total'           => 'Total',
             'Proceed to checkout'   => 'Prosseguir para o pagamento',
             'Pay Now'               => 'Finalizar pedido',
+            'Please select a payment method.' => 'Por favor, selecione um método de pagamento.',
 
             // Detalhes do Pedido
             'Order Details'     => 'Detalhes do pedido',
@@ -70,7 +76,9 @@ add_action('plugins_loaded', function () {
 
             // Cupons e Mensagens
             'Have a coupon?'    => 'Adicionar cupom',
+            'Tem um cupom?'     => 'Adicionar cupom',
             'Click here'        => 'Adicionar',
+            'Clique aqui'       => 'Adicionar',
             'Add coupon code'   => 'Adicionar cupons',
             'Success'           => 'Sucesso',
             'The course was removed successfully' => 'O curso foi removido com sucesso',
@@ -104,15 +112,24 @@ add_action('template_redirect', function () {
             'Course Progress'           => 'Progresso do Curso',
             'Download Certificate'      => 'Baixar certificado',
             'View Certificate'          => 'Ver Certificado',
+            'Duration'                  => 'Duração',
+            'Complete'                  => 'Completo',
+            'A course by'               => 'Publicado por',
+            'Um curso de'               => 'Publicado por',
             
-            // Mensagens
+            // Mensagens e Alertas
             'Success'                   => 'Sucesso',
             'The course was removed successfully' => 'O curso foi removido com sucesso',
             'No payment method found'   => 'Nenhum método de pagamento encontrado',
             'Proceed to checkout'       => 'Prosseguir para o pagamento',
             'Pay Now'                   => 'Finalizar pedido',
             'Have a coupon?'            => 'Adicionar cupom',
+            'Tem um cupom?'             => 'Adicionar cupom',
             'Add to Cart'               => 'Adicionar ao carrinho',
+            'Click here'                => 'Adicionar',
+            'Clique aqui'               => 'Adicionar',
+            'Grand Total'               => 'Total',
+            'Please select a payment method.' => 'Por favor, selecione um método de pagamento.',
 
             // Meses 
             'January'   => 'Janeiro',
@@ -130,7 +147,15 @@ add_action('template_redirect', function () {
         ];
 
         foreach ($replacements as $search => $replace) {
-            $html = preg_replace('/\b' . preg_quote($search, '/') . '\b/', $replace, $html);
+            // Lógica ajustada: Adiciona \b apenas se o termo começar/terminar com letra/número.
+            // Isso corrige problemas com interrogações (?) ou pontos.
+            $pattern = '/';
+            $pattern .= preg_match('/^\w/', $search) ? '\b' : '';
+            $pattern .= preg_quote($search, '/');
+            $pattern .= preg_match('/\w$/', $search) ? '\b' : '';
+            $pattern .= '/';
+            
+            $html = preg_replace($pattern, $replace, $html);
         }
 
         return $html;
